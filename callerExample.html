@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <title>Temperature Monitor</title>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          margin: 0;
+          background-color: #f0f0f0;
+      }
+
+      .container {
+          text-align: center;
+          background: white;
+          max-width: 500px;
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .sub-container {
+          margin-top: 20px;
+          padding: 10px;
+          background-color: #f0f0f0;
+          border-radius: 8px;
+      }
+
+      .temperature {
+          font-size: 28px;
+          margin-top: 20px;
+      }
+
+      .alert {
+          font-size: 18px;
+          color: red;
+      }
+
+      label {
+          display: block;
+          margin-top: 20px;
+          font-size: 14px;
+      }
+
+      .stepper {
+          max-width: 100px;
+          padding: 8px;
+          text-align: center;
+          border-radius: 4px;
+          border: 1px solid #ccc;
+          margin-top: 5px;
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <h1>Temperature Monitor</h1>
+      <div id="temperature" class="temperature">Connecting...</div>
+      <div id="alert" class="alert"></div>
+    </div>
+  </div>
+  <hr>
+  <div class="sub-container">
+    <div class="row">
+      <div class="col-12">
+        <h4>Alert Settings</h4>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <label for="lowPoint">Low Point<em> (Celsius)</em></label>
+        <input class="stepper" type="number" id="lowPoint">
+      </div>
+      <div class="col-4">
+        <label for="highPoint">High Point<em> (Celsius)</em></label>
+        <input class="stepper" type="number" id="highPoint">
+      </div>
+      <div class="col-4">
+        <label for="changeThreshold">Alert Threshold</label>
+        <input class="stepper" type="number" id="changeThreshold" value="0.5">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <label for="toggleAlerts"><input type="checkbox" id="toggleAlerts" checked> <strong>Persistent
+          Alerts</strong></label>
+        <em style="font-size: .9em; color: #7c7c7c">Persistent Alerts will issue multiple notifications based on
+          variations in temperature and the alert
+          thresholds you establish.</em>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <button class="btn btn-primary" style="margin-top: 10px; width: 100%" onclick="sendSettingsToServer()">Save
+          Settings
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+      const temperatureDisplay = document.getElementById('temperature');
+      const ws = new WebSocket('ws://localhost:3000');
+      let alertCount = 0;
+      let persistentAlerts = true;
+
+      // listen to change events on the alert toggle
+      document.getElementById('toggleAlerts').addEventListener('change', function (event) {
+          persistentAlerts = event.target.checked;
+          alertCount = 0;
+      });
+
+      ws.onmessage = function (event) {
+          const data = JSON.parse(event.data);
+          console.log('Received data:', data);
+
+          temperatureDisplay.textContent = data.currentTemperature.Celsius + '°C' + ' / ' + data.currentTemperature.Fahrenheit + '°F';
+
+          if ((!persistentAlerts && alertCount > 0) && lastAlertStatus === data.alertStatus) {
+              document.getElementById('alert').textContent = '';
+          } else {
+              alertCount++;
+              lastAlertStatus = data.alertStatus;
+              if (data.alertStatus === 'HIGH_ALERT') {
+                  document.getElementById('alert').textContent = 'High Point Alert';
+              } else if (data.alertStatus === 'LOW_ALERT') {
+                  document.getElementById('alert').textContent = 'Low Point Alert';
+              } else {
+                  document.getElementById('alert').textContent = ''
+              }
+          }
+      };
+
+      ws.onerror = function (event) {
+          console.error('WebSocket error observed:', event);
+          temperatureDisplay.textContent = 'Error connecting to server.';
+      };
+
+      ws.onclose = function (event) {
+          temperatureDisplay.textContent = 'Connection closed.';
+      };
+
+      const sendSettingsToServer = () => {
+          const lowPoint = document.getElementById('lowPoint').value || null;
+          const highPoint = document.getElementById('highPoint').value || null;
+          const changeThreshold = document.getElementById('changeThreshold').value || null;
+          const settings = {
+              lowPoint,
+              highPoint,
+              changeThreshold
+          };
+          console.log('Sending settings to server:', settings);
+          ws.send(JSON.stringify(settings));
+      };
+  </script>
+</body>
+</html>
