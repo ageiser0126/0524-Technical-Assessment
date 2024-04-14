@@ -7,6 +7,7 @@ node server.js
 
 Server runs on local host - http://localhost:8080/ 
 
+The simulated external source will count up to 100 degress Celsius in using various increments. Once 100 degrees is reached it will count down to 0 in the same fashion. 
 
 
 
