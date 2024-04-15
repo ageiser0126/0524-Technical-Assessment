@@ -20,12 +20,12 @@ describe('TemperatureController', function() {
             expect(temperatureController.getAlertStatus(0, 100, 10)).to.equal('NOMINAL');
         });
 
-        it('should return LOW_ALERT when below the low threshold by more than the set threshold', function() {
+        it('should return LOW_ALERT when below the low threshold', function() {
             temperatureController.currentTemperature = -12;
             expect(temperatureController.getAlertStatus(-10, 100, 2)).to.equal('LOW_ALERT');
         });
 
-        it('should return HIGH_ALERT when above the high threshold by more than the set threshold', function() {
+        it('should return HIGH_ALERT when above the high threshold', function() {
             temperatureController.currentTemperature = 102;
             expect(temperatureController.getAlertStatus(0, 100, 1)).to.equal('HIGH_ALERT');
         });
