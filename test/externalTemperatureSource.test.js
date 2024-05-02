@@ -5,28 +5,28 @@ describe('ExternalTemperatureController', function() {
     let controlTemperature;
 
     beforeEach(() => {
-        controlTemperature = ExternalTemperatureController();
+        controlTemperature = new ExternalTemperatureController();
     });
 
     it('should not exceed the high limit of 110 degrees Celsius', function() {
         for (let i = 0; i < 1000; i++) {
-            const temp = controlTemperature();
+            const temp = controlTemperature.updateTemperature();
             expect(temp).to.be.at.most(110);
         }
     });
 
     it('should not fall below the low limit of 0 degrees Celsius', function() {
         for (let i = 0; i < 1000; i++) {
-            const temp = controlTemperature();
+            const temp = controlTemperature.updateTemperature();
             expect(temp).to.be.at.least(-0.5);
         }
     });
 
     it('should increment and decrement the temperature correctly', function() {
-        let previousTemp = controlTemperature();
+        let previousTemp = controlTemperature.updateTemperature();
         let differences = [];
         for (let i = 0; i < 100; i++) {
-            let currentTemp = controlTemperature();
+            let currentTemp = controlTemperature.updateTemperature();
             differences.push(Math.abs(currentTemp - previousTemp));
             previousTemp = currentTemp;
         }
