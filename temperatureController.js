@@ -1,5 +1,5 @@
 // Importing the external temperature controller
-import {ExternalTemperatureController as getExternalTemperature } from './externalTemperatureSource.js';
+import {ExternalTemperatureController  } from './externalTemperatureSource.js';
 
 // Alert enums
 const ALERT_STATUS = {
@@ -9,7 +9,7 @@ const ALERT_STATUS = {
 }
 export class TemperatureController {
     constructor() {
-        this.externalTemperatureController = getExternalTemperature();
+        this.externalTemperatureController = new ExternalTemperatureController();
         this.currentTemperature = null;
         this.previousTemperature = null;
     }
@@ -17,7 +17,7 @@ export class TemperatureController {
     // Method to update temperatures, called once every (n) for all clients
     updateTemperatures() {
         this.previousTemperature = this.currentTemperature;
-        this.currentTemperature = this.externalTemperatureController();
+        this.currentTemperature = this.externalTemperatureController.updateTemperature();
         return this.getTemperature();
     }
 
@@ -36,13 +36,12 @@ export class TemperatureController {
 
     // Method to check and get alert status based on temperature thresholds and a change threshold
     getAlertStatus(lowPoint, highPoint, threshold) {
-
         if (this.currentTemperature < Number(lowPoint)  && Math.abs(this.currentTemperature - Number(lowPoint)) >= Number(threshold)) {
             return ALERT_STATUS.LOW;
         } else if (this.currentTemperature > Number(highPoint) && Math.abs(Number(highPoint) - this.currentTemperature) >= Number(threshold) ) {
             return ALERT_STATUS.HIGH;
         }
-        return  ALERT_STATUS.NOMINAL;;
+        return  ALERT_STATUS.NOMINAL;
     }
 }
 
