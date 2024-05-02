@@ -5,7 +5,6 @@ let incrementIndex= 0;
 export const ExternalTemperatureController  = () => {
     let temperature = 0;
     let increment = true; // Flag to control whether to increment or decrement
-    const getRandomIncrement = () => increments[Math.floor(Math.random() * increments.length)];
 
     return () => {
         if (temperature >= highLimit) {
