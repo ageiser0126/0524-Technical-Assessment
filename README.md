@@ -1,4 +1,5 @@
 
+
 # Wizards - Technical Assessment
 Technical Assessment
 
@@ -50,7 +51,7 @@ Some callers may only want to be informed that the temperature has reached 0 deg
    the client session data. this could be used to help manage alerts and
    be useful information to display in the UI.
    
- ~~- ExternalTemperatureSource.js while this is a placeholder it should be
+ - ~~- ExternalTemperatureSource.js while this is a placeholder it should be
    encapsulated into a class to improve management, readability and
    future maintainability.~~  *PR - Rework 05022024*
    
@@ -58,5 +59,5 @@ Some callers may only want to be informed that the temperature has reached 0 deg
    submitted to server.js #36
       
  - *Tech Debt*
- - ~~Unnecessary line break temperatureController.js #39~~ *PR - Rework 05022024*
- - ~~Unused constant externalTemperatureSource.js #8~~ *PR - Rework 05022024*
+	 - ~~Unnecessary line break temperatureController.js #39~~ *PR - Rework 05022024*
+	 - ~~Unused constant externalTemperatureSource.js #8~~ *PR - Rework 05022024*
