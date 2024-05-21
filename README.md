@@ -14,6 +14,7 @@ The simulated external source will count up to 100 degress Celsius in using vari
 
 
 ----- Test instructions ---
+Within 2-3 hours 
 
 Design and implement (in the OO language of your choice) a thermometer class or classes that read the temperature of some external source. 
 
@@ -38,7 +39,7 @@ Some callers may only want to be informed that the temperature has reached 0 deg
 
  
 
-**The following reflections are the result of a ~30 min review prior to 5/3 meeting.**
+**The following reflections are the result of a ~30 min review prior to meeting.**
 
  - The server needs to support long polling request in the case web
    sockets are not available or preferred by the front end application. 
