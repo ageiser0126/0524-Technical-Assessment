@@ -14,7 +14,7 @@ The simulated external source will count up to 100 degress Celsius in using vari
 
 
 ----- Test instructions ---
-Within 2-3 hours 
+## Time Limit 2-3 hours ##
 
 Design and implement (in the OO language of your choice) a thermometer class or classes that read the temperature of some external source. 
 
